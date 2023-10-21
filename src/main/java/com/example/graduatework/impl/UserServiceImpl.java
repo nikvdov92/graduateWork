@@ -1,4 +1,4 @@
-package com.example.graduatework.service.impl;
+package com.example.graduatework.impl;
 
 import com.example.graduatework.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

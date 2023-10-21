@@ -1,6 +1,8 @@
 package com.example.graduatework.dto;
 
+import java.util.List;
+
 public class Ads {
-    private Integer count;
-    private Ad results;
+    private int count;
+    private List<Ad> results;
 }

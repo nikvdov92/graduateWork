@@ -5,15 +5,15 @@ import lombok.Data;
 
 @Data
 public class Comment {
-    private Integer author;
+    private int author;
 
     private String authorImage;
 
     private String authorFirstName;
 
-    private Integer createdAt;
+    private long createdAt;
 
-    private Integer pk;
+    private int pk;
 
     private String text;
 

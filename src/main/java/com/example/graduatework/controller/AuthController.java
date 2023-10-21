@@ -10,9 +10,10 @@ import com.example.graduatework.dto.Register;
 import com.example.graduatework.service.AuthService;
 
 @RestController
-@RequestMapping(value = "http://localhost:3000")
+@CrossOrigin(value = "http://localhost:3000")
 @Tag(name = "Вход и регистрация пользователей", description = "CRUD-операции для работы с пользователями")
 @RequiredArgsConstructor
+
 public class AuthController {
 
     private final AuthService authService;
