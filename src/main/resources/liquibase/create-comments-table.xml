@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="1" author="nikvdov">
+
+        <preConditions>
+            <not>
+                <tableExists tableName="comments"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="comments">
+            <column name="id" type="INT" startWith="1" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="author_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ads_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="text" type="VARCHAR(1024)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="nikvdov">
+        <preConditions>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FK_COMMENTS_TO_USER_ID"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint constraintName="FK_COMMENTS_TO_USER_ID"
+                                 baseColumnNames="author_id"
+                                 baseTableName="comments"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"/>
+
+    </changeSet>
+
+    <changeSet id="3" author="nikvdov">
+        <preConditions>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FK_COMMENTS_TO_AD_ID"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint constraintName="FK_COMMENTS_TO_AD_ID"
+                                 baseColumnNames="ads_id"
+                                 baseTableName="comments"
+                                 referencedColumnNames="id"
+                                 referencedTableName="ads"
+                                 deleteCascade="true"/>
+    </changeSet>
+</databaseChangeLog>
