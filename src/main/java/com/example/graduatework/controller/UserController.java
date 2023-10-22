@@ -2,15 +2,19 @@ package com.example.graduatework.controller;
 
 import com.example.graduatework.dto.NewPassword;
 import com.example.graduatework.dto.UpdateUser;
-import com.example.graduatework.dto.User;
-import com.example.graduatework.exception.ForbiddenException;
+import com.example.graduatework.dto.UserDto;
 import com.example.graduatework.exception.UnauthorizedException;
 import com.example.graduatework.service.UserService;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,8 +28,9 @@ import io.swagger.v3.oas.annotations.Operation;
 
 
 @Slf4j
+@Validated
 @RestController
-@CrossOrigin(value = "http://localhost:3000")
+@CrossOrigin(value = "http://localhost:5432")
 @RequestMapping("/users")
 @Tag(name = "Управление пользователями", description = "CRUD-операции для работы с пользователями")
 @RequiredArgsConstructor
@@ -42,68 +47,69 @@ public class UserController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "403", description = "Forbidden")
     })
-    public ResponseEntity setPassword(@Validated @RequestBody NewPassword newPassword) {
-        try {
-            userService.setPassword(newPassword);
+    public ResponseEntity<Void> setPassword(@RequestBody NewPassword newPassword,
+                                            Authentication authentication) {
+        log.info("Запрос на обновление пароля");
+        if (userService.setPassword(newPassword, authentication)) {
             return ResponseEntity.ok().build();
-        } catch (UnauthorizedException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } catch (ForbiddenException ex) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @GetMapping("/me")
     @Operation(summary = "Получение информации об авторизованном пользователе")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "ОК"),
+            @ApiResponse(responseCode = "200", description = "ОК",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = UserDto.class)))),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    public ResponseEntity<User> getUser(@Validated @RequestBody User user) {
-        if (user != null) {
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } else {
+    public ResponseEntity<UserDto> getUser(Authentication authentication) {
+        log.info("Запрос на получение информации об авторизованном пользователе");
+
+        try {
+            UserDto userDto = userService.getUser(authentication);
+            return ResponseEntity.ok(userDto);
+        } catch (UnauthorizedException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
-    @PostMapping
+    @PostMapping("/me")
     @Operation(summary = "Обновление информации об авторизованном пользователе")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "ОК"),
+            @ApiResponse(responseCode = "200", description = "ОК",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = UpdateUser.class)))),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    public ResponseEntity<UpdateUser> updateUser(@Validated @RequestBody UpdateUser updateUser) {
-        if (updateUser != null) {
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } else {
+    public ResponseEntity<UserDto> updateUser(@RequestBody UpdateUser updateUser,
+                                              Authentication authentication) {
+        log.info("Запрос на обновление информации об авторизованном пользователе");
+
+        try {
+            UserDto updatedUser = userService.updateUser(updateUser, authentication);
+            return ResponseEntity.ok(updatedUser);
+        } catch (UnauthorizedException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
-    @PatchMapping("/me/image")
+    @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Обновление аватара авторизованного пользователя")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "ОК"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    public ResponseEntity<UpdateUser> updateUserImage(@Validated @RequestParam("image") MultipartFile image) {
-        if (!image.isEmpty()) {
-            User user = userService.getAuthenticatedUser();
-            if (user != null) {
-                try {
-                    String fileName = image.getOriginalFilename();
-                    user.setImage(fileName);
-                    userService.updateUser(user);
-                    return ResponseEntity.status(HttpStatus.OK).build();
-                } catch (Exception e) {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-                }
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    public ResponseEntity<Void> updateUserImage(@RequestPart("image") MultipartFile image,
+                                                Authentication authentication) {
+        log.info("Запрос на обновление аватара авторизованного пользователя");
+
+        try {
+            userService.updateUserImage(image, authentication);
+            return ResponseEntity.ok().build();
+        } catch (UnauthorizedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 }

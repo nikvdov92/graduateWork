@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Data
-public class User {
+public class UserDto {
     private int id;
     @Email(regexp = ".+@.+[.]..+")
     @Schema(example = "user@user.com")

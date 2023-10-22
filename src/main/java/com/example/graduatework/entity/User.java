@@ -1,7 +1,7 @@
 package com.example.graduatework.entity;
 
-import com.example.graduatework.dto.Ad;
-import com.example.graduatework.dto.Comment;
+import com.example.graduatework.dto.AdDto;
+import com.example.graduatework.dto.CommentDto;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -17,7 +17,7 @@ import java.util.List;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class UserEntity {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,9 +44,9 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     @JsonManagedReference
-    List<Ad> ads;
+    List<AdDto> adDtos;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     @JsonManagedReference
-    List<Comment> comments;
+    List<CommentDto> commentDtos;
 }

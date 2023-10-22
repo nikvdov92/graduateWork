@@ -2,85 +2,85 @@ package com.example.graduatework.controller;
 
 import com.example.graduatework.dto.*;
 import com.example.graduatework.exception.ForbiddenException;
+import com.example.graduatework.exception.NoContentException;
+import com.example.graduatework.exception.NotFoundException;
 import com.example.graduatework.exception.UnauthorizedException;
-import com.example.graduatework.service.AdsService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Slf4j
+@Validated
 @RestController
-@CrossOrigin(value = "http://localhost:3000")
+@CrossOrigin(value = "http://localhost:5432")
 @RequestMapping("/ads")
 @Tag(name = "Объявления", description = "CRUD-операции для работы с объявлениями")
 @RequiredArgsConstructor
 
 public class AdsController {
-    private final AdsService adsService;
-
-    private List<Ad> adList = new ArrayList<>();
-
-
-    @GetMapping
+    @GetMapping()
     @Operation(summary = "Получение всех объявлений")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK")
+            @ApiResponse(responseCode = "200", description = "OK",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = AdDto.class))))
     })
-    public ResponseEntity<Ad> getAllAds() {
-        Ad ad = adsService.getAllAds();
-        return ResponseEntity.ok(ad);
+    public ResponseEntity<Ads> getAllAds() {
+        log.info("Запросить получение всех объявлений");
+        return ResponseEntity.ok(new Ads());
     }
 
-    @PostMapping
+    @PostMapping()
     @Operation(summary = "Добавление объявления")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Created"),
+            @ApiResponse(responseCode = "201", description = "Created",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    array = @ArraySchema(schema = @Schema(implementation = AdDto.class)))),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    public ResponseEntity<Ad> addAd(@RequestPart("image") MultipartFile image,
-                                    @RequestPart("properties") CreateOrUpdateAd adProperties) {
+    public ResponseEntity<AdDto> addAd(@RequestPart("properties") CreateOrUpdateAd properties,
+                                       @RequestPart("image") MultipartFile image) {
         try {
-            Ad ad = adsService.addAd(image, adProperties);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ad);
-        } catch (UnauthorizedException ex) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized", ex);
+        log.info("Запрос на добавление объявления");
+        return ResponseEntity.ok(new AdDto());
+        } catch (UnauthorizedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Получение информации об объявлении")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "ОК"),
+            @ApiResponse(responseCode = "200", description = "ОК",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = AdDto.class)))),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "404", description = "Not found")
     })
-    public ResponseEntity<ExtendedAd> getAd(@PathVariable("id") int id) {
+    public ResponseEntity<ExtendedAd> getAds(@PathVariable("id") int id) {
         try {
-            ExtendedAd ad = adsService.getAdById(id);
-            if (ad != null) {
-                return ResponseEntity.ok(ad);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+        log.info("Запрос информации по объявлению, идентификатор:" + id);
+        return ResponseEntity.ok(new ExtendedAd());
         } catch (UnauthorizedException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @Operation(summary = "Удаление объявления")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "No Content"),
@@ -90,37 +90,40 @@ public class AdsController {
     })
     public ResponseEntity<Void> deleteAd(@PathVariable("id") int id) {
         try {
-            boolean deleted = adsService.deleteAd(id);
-            if (deleted) {
-                return ResponseEntity.noContent().build();
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+        log.info("Запрос на удаление объявления, идентификатор:" + id);
+        return ResponseEntity.ok().build();
+        } catch (NoContentException e) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (UnauthorizedException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (ForbiddenException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
-    @PatchMapping
+    @PatchMapping("/{id}")
     @Operation(summary = "Обновление информации об объявлении")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "200", description = "OK",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    array = @ArraySchema(schema = @Schema(implementation = AdDto.class)))),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "Not found")
     })
-    public ResponseEntity<Ad> updateAd(@PathVariable("id") int id, @RequestBody CreateOrUpdateAd adData) {
+    public ResponseEntity<AdDto> updateAds(@PathVariable("id") int id,
+                                           @RequestBody CreateOrUpdateAd createOrUpdateAd) {
         try {
-            Ad updatedAd = adsService.updateAd(id, adData);
-            if (updatedAd != null) {
-                return ResponseEntity.ok().build();
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+        log.info("Запрос на обновление объявления, идентификатор:" + id);
+        return ResponseEntity.ok(new AdDto());
+        } catch (NoContentException e) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (UnauthorizedException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } catch (ForbiddenException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -129,22 +132,21 @@ public class AdsController {
     @GetMapping("/me")
     @Operation(summary = "Получение объявлений авторизованного пользователя")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "ОК"),
+            @ApiResponse(responseCode = "200", description = "ОК",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = Ads.class)))),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
     public ResponseEntity<Ads> getAdsMe() {
         try {
-            Ads ads = new Ads();
-            ads.setCount(adList.size());
-            ads.setResults(adList);
-            return ResponseEntity.ok(ads);
-        } catch (Exception e) {
-            log.error("Failed to get ads: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            log.info("Запрос на получение объявлений от авторизованного пользователя");
+            return ResponseEntity.ok(new Ads());
+        } catch (UnauthorizedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
-    @PatchMapping("/{id}/image")
+    @PatchMapping(value = "/{id}/image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary = "Обновление картинки объявления")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -152,32 +154,20 @@ public class AdsController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "404", description = "Not found")
     })
-    public ResponseEntity<Ad> updateImage(@PathVariable int id,
-                                          @RequestParam("image") MultipartFile image) {
+    public ResponseEntity<?> updateImage(@PathVariable("id") int id,
+                                         @RequestPart("image") MultipartFile image) {
         try {
-            if (!image.getContentType().startsWith("image/")) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-            }
-            Ad ad = getAdById(id);
-            if (ad == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-            }
-            ad.setImage(Arrays.toString(image.getBytes()));
-            saveAd(ad);
-            return ResponseEntity.ok(ad);
-        } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        log.info("Запрос на обновление изображения объявления");
+        return ResponseEntity.ok().build();
+        } catch (NoContentException e) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch (UnauthorizedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (ForbiddenException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-    }
-    private Ad getAdById(int id) {
-        Ad ad = new Ad();
-        ad.setPk(id);
-        return ad;
-    }
-    private void saveAd(Ad ad) {
-        System.out.println("Saving ad: " + ad);
     }
 }
 

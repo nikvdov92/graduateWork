@@ -4,7 +4,7 @@ package com.example.graduatework.dto;
 import lombok.Data;
 
 @Data
-public class Comment {
+public class CommentDto {
     private int author;
 
     private String authorImage;

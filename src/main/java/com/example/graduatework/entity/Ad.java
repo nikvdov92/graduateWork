@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "ads")
-public class AdEntity {
+public class Ad {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +20,8 @@ public class AdEntity {
 
     @ManyToOne
     @JoinColumn(name = "author_id")
-    private UserEntity author;
+    private User author;
 
     @OneToMany(mappedBy = "ad", cascade = CascadeType.ALL)
-    private List<CommentEntity> commentEntities;
+    private List<Comment> commentEntities;
 }

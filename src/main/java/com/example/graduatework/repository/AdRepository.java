@@ -1,9 +1,9 @@
 package com.example.graduatework.repository;
 
-import com.example.graduatework.entity.Comment;
+import com.example.graduatework.entity.Ad;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment, Integer> {
+public interface AdRepository extends JpaRepository<Ad, Integer> {
 }

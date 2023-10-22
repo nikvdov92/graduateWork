@@ -1,18 +1,20 @@
 package com.example.graduatework.service;
 
 import com.example.graduatework.dto.NewPassword;
-import com.example.graduatework.dto.User;
+import com.example.graduatework.dto.UpdateUser;
+import com.example.graduatework.dto.UserDto;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 
-    User getAuthenticatedUser();
+    boolean setPassword(NewPassword newPassword, Authentication authentication);
 
-    void updateUser(User user);
+    UserDto getUser(Authentication authentication);
 
-    void newPassword(String newPassword, String currentPassword);
+    UserDto updateUser(UpdateUser updateUser, Authentication authentication);
 
-
-    void setPassword(NewPassword newPassword);
+    void updateUserImage(MultipartFile image, Authentication authentication);
 
 
 }
