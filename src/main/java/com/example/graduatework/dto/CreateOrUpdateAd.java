@@ -2,7 +2,6 @@ package com.example.graduatework.dto;
 
 
 import lombok.Data;
-
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
