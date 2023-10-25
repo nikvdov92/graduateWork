@@ -3,20 +3,22 @@ package com.example.graduatework.entity;
 import com.example.graduatework.dto.AdDto;
 import com.example.graduatework.dto.CommentDto;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import com.example.graduatework.dto.Role;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.util.List;
-@Entity
-@Table(name = "users")
+@AllArgsConstructor
+@Builder
 @Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@Table(name = "users")
+
 public class User {
 
     @Id
@@ -44,9 +46,9 @@ public class User {
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     @JsonManagedReference
-    List<AdDto> adDtos;
+    List<AdDto> ads;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     @JsonManagedReference
-    List<CommentDto> commentDtos;
+    List<CommentDto> comments;
 }
