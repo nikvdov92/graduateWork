@@ -18,6 +18,7 @@ import java.util.List;
 public class Ad {
 
     @Id
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String title;
@@ -26,6 +27,7 @@ public class Ad {
     private String description;
 
     @ManyToOne
+
     @JoinColumn(name = "author_id")
     private User author;
 

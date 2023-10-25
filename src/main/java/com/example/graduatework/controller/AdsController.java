@@ -29,7 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class AdsController {
 
-    @GetMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @GetMapping (consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Получение всех объявлений")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK",
