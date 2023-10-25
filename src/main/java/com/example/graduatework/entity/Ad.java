@@ -1,13 +1,20 @@
 package com.example.graduatework.entity;
-import lombok.Data;
 
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.util.List;
 
+@AllArgsConstructor
+@Builder
 @Data
 @Entity
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@NoArgsConstructor
 @Table(name = "ads")
+
 public class Ad {
 
     @Id
@@ -23,5 +30,5 @@ public class Ad {
     private User author;
 
     @OneToMany(mappedBy = "ad", cascade = CascadeType.ALL)
-    private List<Comment> commentEntities;
+    private List<Comment> comments;
 }

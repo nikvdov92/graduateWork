@@ -3,7 +3,6 @@ package com.example.graduatework.controller;
 import com.example.graduatework.dto.NewPassword;
 import com.example.graduatework.dto.UpdateUser;
 import com.example.graduatework.dto.UserDto;
-import com.example.graduatework.exception.UnauthorizedException;
 import com.example.graduatework.service.UserService;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -66,13 +65,8 @@ public class UserController {
     })
     public ResponseEntity<UserDto> getUser(Authentication authentication) {
         log.info("Запрос на получение информации об авторизованном пользователе");
-
-        try {
             UserDto userDto = userService.getUser(authentication);
             return ResponseEntity.ok(userDto);
-        } catch (UnauthorizedException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
     }
 
     @PostMapping("/me")
@@ -86,13 +80,8 @@ public class UserController {
     public ResponseEntity<UserDto> updateUser(@RequestBody UpdateUser updateUser,
                                               Authentication authentication) {
         log.info("Запрос на обновление информации об авторизованном пользователе");
-
-        try {
             UserDto updatedUser = userService.updateUser(updateUser, authentication);
             return ResponseEntity.ok(updatedUser);
-        } catch (UnauthorizedException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
     }
 
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -104,12 +93,7 @@ public class UserController {
     public ResponseEntity<Void> updateUserImage(@RequestPart("image") MultipartFile image,
                                                 Authentication authentication) {
         log.info("Запрос на обновление аватара авторизованного пользователя");
-
-        try {
             userService.updateUserImage(image, authentication);
             return ResponseEntity.ok().build();
-        } catch (UnauthorizedException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
     }
 }

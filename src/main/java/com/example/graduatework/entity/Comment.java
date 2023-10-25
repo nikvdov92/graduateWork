@@ -1,15 +1,20 @@
 package com.example.graduatework.entity;
 
-import com.example.graduatework.dto.AdDto;
-import com.example.graduatework.dto.UserDto;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "comments")
+@AllArgsConstructor
+@Builder
 @Data
+@Entity
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@Table(name = "comments")
+
 public class Comment {
 
     @Id
@@ -20,12 +25,10 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id", referencedColumnName = "id")
-    @JsonIgnore
-    private UserDto author;
+    private User author;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ads_id", referencedColumnName = "id")
-    @JsonIgnore
-    private AdDto adDto;
+    private Ad ad;
 
 }

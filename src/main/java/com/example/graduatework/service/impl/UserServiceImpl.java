@@ -22,6 +22,10 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
+    /**
+     * Обновление пароля
+     */
+
     @Override
     public boolean setPassword(NewPassword newPassword, Authentication authentication) {
         try {
@@ -40,6 +44,10 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
+    /**
+     * Получение информации об авторизованном пользователе
+     */
+
     @Override
     public UserDto getUser(Authentication authentication) {
         User user = userRepository.findUserByEmail(authentication.getName())
@@ -48,6 +56,10 @@ public class UserServiceImpl implements UserService {
         log.info("Запрошенная информация: " + userDto);
         return userDto;
     }
+
+    /**
+     * Обновление информации об авторизованном пользователе
+     */
 
     @Override
     public UserDto updateUser(UpdateUser updateUser, Authentication authentication) {
@@ -61,6 +73,10 @@ public class UserServiceImpl implements UserService {
         log.info("Пользователь обновлён :" + userDto);
         return userDto;
     }
+
+    /**
+     * Обновление аватара авторизованного пользователя
+     */
 
     @Override
     public void updateUserImage(MultipartFile image, Authentication authentication) {
