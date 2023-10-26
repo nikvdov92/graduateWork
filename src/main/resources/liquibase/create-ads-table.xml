@@ -35,21 +35,12 @@
             <not>
                 <tableExists tableName="user"/>
             </not>
-            <not>
-                <tableExists tableName="categories"/>
-            </not>
         </preConditions>
 
         <addForeignKeyConstraint baseTableName="ads"
                                  baseColumnNames="author_id"
                                  constraintName="FK_ADS_TO_USER_ID"
                                  referencedTableName="user"
-                                 referencedColumnNames="id"/>
-
-        <addForeignKeyConstraint baseTableName="ads"
-                                 baseColumnNames="category_id"
-                                 constraintName="FK_ADS_TO_CATEGORY_ID"
-                                 referencedTableName="categories"
                                  referencedColumnNames="id"/>
     </changeSet>
 </databaseChangeLog>

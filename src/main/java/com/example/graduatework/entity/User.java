@@ -46,9 +46,9 @@ public class User {
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     @JsonManagedReference
-    List<AdDto> ads;
+    List<Ad> ads;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     @JsonManagedReference
-    List<CommentDto> comments;
+    List<Comment> comments;
 }

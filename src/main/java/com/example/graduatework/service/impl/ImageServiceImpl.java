@@ -15,9 +15,8 @@ import java.nio.file.StandardCopyOption;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Value (staticConstructor = "${image.dir.path}")
 public class ImageServiceImpl implements ImageService {
-
-    @Value("${image.dir.path}")
 
     private final String imageDir;
 
@@ -37,15 +36,21 @@ public class ImageServiceImpl implements ImageService {
         return imagePath.toString();
     }
 
-    /**
-     * Получение расширения файла
-     */
-
-    private String getFileExtension(String filename) {
-        int dotIndex = filename.lastIndexOf('.');
-        if (dotIndex == -1 || dotIndex == filename.length() - 1) {
-            throw new IllegalArgumentException("Неверное имя файла: " + filename);
-        }
-        return filename.substring(dotIndex + 1);
+    @Override
+    public void deleteImage(String image) {
+        File imageFile = new File(imageDir + image);
+        imageFile.delete();
     }
-}
+
+        /**
+         * Получение расширения файла
+         */
+
+        private String getFileExtension (String filename){
+            int dotIndex = filename.lastIndexOf('.');
+            if (dotIndex == -1 || dotIndex == filename.length() - 1) {
+                throw new IllegalArgumentException("Неверное имя файла: " + filename);
+            }
+            return filename.substring(dotIndex + 1);
+        }
+    }

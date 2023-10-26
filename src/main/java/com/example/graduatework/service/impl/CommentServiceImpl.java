@@ -42,7 +42,6 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public CommentDto addComment(int adId, CreateOrUpdateComment text, Authentication authentication) {
-        try {
             User user = userRepository.findUserByEmail(authentication.getName())
                     .orElseThrow(UserNotFoundException::new);
             Ad ad = adRepository.findById(adId)
@@ -56,10 +55,6 @@ public class CommentServiceImpl implements CommentService {
             commentRepository.save(comment);
             log.info("Комментарий создан: " + comment);
             return commentMapper.commentToCommentDto(comment);
-        } catch (Exception e) {
-            log.warn("Не удалось создать комментарий: " + e);
-        }
-        return null;
     }
 
     /**
@@ -69,24 +64,18 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public boolean deleteComment(int adId, int commentId, Authentication authentication) {
-        try {
-            Comment comment = commentRepository.findById(commentId)
-                    .orElseThrow(CommentNotFoundException::new);
-            if (comment.getAd().getId() != adId) {
-                throw new AdNotFoundException();
-            }
-            User author = comment.getAuthor();
-            if (author.getEmail().equals(authentication.getName()) || authentication.getAuthorities().contains
-                    (new SimpleGrantedAuthority("role_admin"))) {
-                commentRepository.delete(comment);
-                log.info("Комментарий удалён: " + comment);
-                return true;
-            }
-        } catch (Exception e) {
-            log.warn("Комментарий не удалён: " + e);
-            return false;
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(CommentNotFoundException::new);
+        if (comment.getAd().getId() != adId) {
+            throw new AdNotFoundException();
         }
-        log.warn("Комментарий не удален. Не авторизованный доступ");
+        User author = comment.getAuthor();
+        if (author.getEmail().equals(authentication.getName()) || authentication.getAuthorities().contains
+                (new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            commentRepository.delete(comment);
+            log.info("Комментарий удалён: " + comment);
+            return true;
+        }
         return false;
     }
 
@@ -108,7 +97,6 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public CommentDto updateComment(int adId, int commentId,
                                     CreateOrUpdateComment text, Authentication authentication) {
-        try {
             Comment comment = commentRepository.findById(commentId)
                     .orElseThrow(CommentNotFoundException::new);
             if (comment.getAd().getId() != adId) {
@@ -116,15 +104,12 @@ public class CommentServiceImpl implements CommentService {
             }
             User author = comment.getAuthor();
             if (author.getEmail().equals(authentication.getName()) || authentication.getAuthorities().contains
-                    (new SimpleGrantedAuthority("role_admin"))) {
+                    (new SimpleGrantedAuthority("ROLE_ADMIN"))) {
                 comment.setText(text.getText());
                 commentRepository.save(comment);
                 log.info("Комментарий обновлен: " + comment);
                 return commentMapper.commentToCommentDto(comment);
             }
-        } catch (Exception e) {
-            log.warn("Не удалось обновить комментарий: " + e);
-        }
         return null;
     }
 }

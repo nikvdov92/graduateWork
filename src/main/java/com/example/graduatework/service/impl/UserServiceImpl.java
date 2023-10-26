@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean setPassword(NewPassword newPassword, Authentication authentication) {
-        try {
             User user = userRepository.findUserByEmail(authentication.getName())
                     .orElseThrow(UserNotFoundException::new);
             if (user.getPassword().equals(newPassword.getCurrentPassword())) {
@@ -39,10 +38,6 @@ public class UserServiceImpl implements UserService {
                 log.info("Пароль изменён");
                 return true;
             }
-        } catch (Exception e) {
-            log.warn("Пароль не изменён " + e);
-            return false;
-        }
         return false;
     }
 
