@@ -2,8 +2,8 @@ package com.example.graduatework.service.impl;
 
 import com.example.graduatework.service.ImageService;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,9 +15,8 @@ import java.nio.file.StandardCopyOption;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Value (staticConstructor = "${image.dir.path}")
 public class ImageServiceImpl implements ImageService {
-
+    @Value("${image.dir.path}")
     private final String imageDir;
 
     /**

@@ -15,12 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
-@Validated
 @RestController
 @CrossOrigin(value = "http://localhost:5432")
 @RequestMapping(value = "/ads")
@@ -29,7 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class AdsController {
 
-    @GetMapping (consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @GetMapping ()
     @Operation(summary = "Получение всех объявлений")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK",
@@ -42,7 +40,7 @@ public class AdsController {
         return ResponseEntity.ok(new Ads());
     }
 
-    @PostMapping()
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Добавление объявления")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created",

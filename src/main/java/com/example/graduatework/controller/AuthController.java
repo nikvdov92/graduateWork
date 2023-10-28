@@ -13,12 +13,10 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@Validated
 @CrossOrigin(value = "http://localhost:5432")
 @Tag(name = "Вход и регистрация пользователей", description = "CRUD-операции для работы с пользователями")
 @RequiredArgsConstructor

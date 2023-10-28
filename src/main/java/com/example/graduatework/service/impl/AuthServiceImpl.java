@@ -1,8 +1,8 @@
 package com.example.graduatework.service.impl;
 
 import com.example.graduatework.dto.Register;
-
 import com.example.graduatework.service.AuthService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.User;

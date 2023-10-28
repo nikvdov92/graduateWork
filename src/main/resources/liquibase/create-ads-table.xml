@@ -29,14 +29,13 @@
 
     <changeSet id="2" author="nikvdov">
         <preConditions>
-            <not>
-                <foreignKeyConstraintExists foreignKeyName="FK_ADS_TO_USER_ID"/>
-            </not>
-            <not>
+            <and>
+                <not>
+                    <foreignKeyConstraintExists foreignKeyName="FK_ADS_TO_USER_ID"/>
+                </not>
                 <tableExists tableName="user"/>
-            </not>
+            </and>
         </preConditions>
-
         <addForeignKeyConstraint baseTableName="ads"
                                  baseColumnNames="author_id"
                                  constraintName="FK_ADS_TO_USER_ID"
