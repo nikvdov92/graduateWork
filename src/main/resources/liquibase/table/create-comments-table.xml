@@ -3,9 +3,9 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
-    <changeSet id="1" author="nikvdov">
+    <changeSet id="1" author="NikVdov92">
 
         <preConditions>
             <not>
@@ -30,7 +30,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="2" author="nikvdov">
+    <changeSet id="2" author="NikVdov92">
         <preConditions>
             <not>
                 <foreignKeyConstraintExists foreignKeyName="FK_COMMENTS_TO_USER_ID"/>
@@ -44,7 +44,7 @@
 
     </changeSet>
 
-    <changeSet id="3" author="nikvdov">
+    <changeSet id="3" author="NikVdov92">
         <preConditions>
             <not>
                 <foreignKeyConstraintExists foreignKeyName="FK_COMMENTS_TO_AD_ID"/>

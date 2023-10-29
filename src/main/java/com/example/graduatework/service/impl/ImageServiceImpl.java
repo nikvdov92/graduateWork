@@ -11,13 +11,17 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.lang.String;
+
+
 
 @Slf4j
-@Service
 @RequiredArgsConstructor
+@Service
 public class ImageServiceImpl implements ImageService {
     @Value("${image.dir.path}")
     private final String imageDir;
+
 
     /**
      * Загрузка изображения
@@ -41,15 +45,15 @@ public class ImageServiceImpl implements ImageService {
         imageFile.delete();
     }
 
-        /**
-         * Получение расширения файла
-         */
+    /**
+     * Получение расширения файла
+     */
 
-        private String getFileExtension (String filename){
-            int dotIndex = filename.lastIndexOf('.');
-            if (dotIndex == -1 || dotIndex == filename.length() - 1) {
-                throw new IllegalArgumentException("Неверное имя файла: " + filename);
-            }
-            return filename.substring(dotIndex + 1);
+    private String getFileExtension (String filename){
+        int dotIndex = filename.lastIndexOf('.');
+        if (dotIndex == -1 || dotIndex == filename.length() - 1) {
+            throw new IllegalArgumentException("Неверное имя файла: " + filename);
         }
+        return filename.substring(dotIndex + 1);
     }
+}
