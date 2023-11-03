@@ -3,9 +3,9 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
-    <changeSet id="1" author="NikVdov92">
+    <changeSet id="1" author="nikvdov">
 
         <preConditions>
             <not>
@@ -27,19 +27,18 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="2" author="NikVdov92">
+    <changeSet id="2" author="nikvdov">
         <preConditions>
-            <and>
-                <not>
-                    <foreignKeyConstraintExists foreignKeyName="FK_ADS_TO_USER_ID"/>
-                </not>
-                <tableExists tableName="user"/>
-            </and>
+            <tableExists tableName="users"/>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FK_ADS_TO_USER_ID"/>
+            </not>
         </preConditions>
-        <addForeignKeyConstraint baseTableName="ads"
+        <addForeignKeyConstraint constraintName="FK_ADS_TO_USERS_ID"
                                  baseColumnNames="author_id"
-                                 constraintName="FK_ADS_TO_USER_ID"
-                                 referencedTableName="user"
-                                 referencedColumnNames="id"/>
+                                 baseTableName="ads"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"
+                                 deleteCascade="true"/>
     </changeSet>
 </databaseChangeLog>

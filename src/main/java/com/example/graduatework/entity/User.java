@@ -1,7 +1,5 @@
 package com.example.graduatework.entity;
 
-import com.example.graduatework.dto.AdDto;
-import com.example.graduatework.dto.CommentDto;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
