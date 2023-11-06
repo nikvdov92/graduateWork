@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.lang.String;
+import java.util.Objects;
 
+import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 
 @Slf4j
@@ -29,16 +31,29 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public String uploadImage(String imageId, MultipartFile imageFile) throws IOException {
-        String filename = imageId + "." + getFileExtension(imageFile.getOriginalFilename());
-        Path imagePath = Path.of(imageDir, filename);
+        String imageName = imageId + "." + getExtensions(Objects.requireNonNull(imageFile.getOriginalFilename()));
 
-        try (InputStream inputStream = imageFile.getInputStream()) {
-            Files.copy(inputStream, imagePath, StandardCopyOption.REPLACE_EXISTING);
+        Path filePath = Path.of(String.format("%s/%s", imageDir, imageName));
+        Files.createDirectories(filePath.getParent());
+        Files.deleteIfExists(filePath);
+
+        try (InputStream is = imageFile.getInputStream();
+             OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
+             BufferedInputStream bis = new BufferedInputStream(is, 1024);
+             BufferedOutputStream bos = new BufferedOutputStream(os, 1024)) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+
+            while ((bytesRead = bis.read(buffer)) != -1) {
+                bos.write(buffer, 0, bytesRead);
+            }
         }
-
-        return imagePath.toString();
+        return imageName.replace(".", "");
     }
 
+    /**
+     * Удаление изображения
+     */
     @Override
     public void deleteImage(String image) {
         File imageFile = new File(imageDir + image);
@@ -46,10 +61,24 @@ public class ImageServiceImpl implements ImageService {
     }
 
     /**
+     * Изменить изображение
+     */
+
+    @Override
+    public void getImage(String imageName, HttpServletResponse response) throws IOException {
+        Path filePath = Path.of(String.format("%s/%s", imageDir, imageName.replace("_", ".")));
+        try (InputStream is = Files.newInputStream(filePath);
+             OutputStream os = response.getOutputStream()) {
+            response.setStatus(200);
+            is.transferTo(os);
+        }
+    }
+
+    /**
      * Получение расширения файла
      */
 
-    private String getFileExtension (String filename){
+    private String getExtensions (String filename) {
         int dotIndex = filename.lastIndexOf('.');
         if (dotIndex == -1 || dotIndex == filename.length() - 1) {
             throw new IllegalArgumentException("Неверное имя файла: " + filename);

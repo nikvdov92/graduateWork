@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@CrossOrigin(value = "http://localhost:5432")
+@CrossOrigin(value = "http://localhost:3000")
 @Tag(name = "Вход и регистрация пользователей", description = "CRUD-операции для работы с пользователями")
 @RequiredArgsConstructor
 
