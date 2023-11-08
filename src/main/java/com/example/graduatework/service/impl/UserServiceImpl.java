@@ -8,8 +8,10 @@ import com.example.graduatework.exception.UserNotFoundException;
 import com.example.graduatework.mapper.UserMapper;
 import com.example.graduatework.repository.UserRepository;
 import com.example.graduatework.service.UserService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,9 +24,12 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
+    /**
+     * Обновление пароля
+     */
+
     @Override
     public boolean setPassword(NewPassword newPassword, Authentication authentication) {
-        try {
             User user = userRepository.findUserByEmail(authentication.getName())
                     .orElseThrow(UserNotFoundException::new);
             if (user.getPassword().equals(newPassword.getCurrentPassword())) {
@@ -33,12 +38,12 @@ public class UserServiceImpl implements UserService {
                 log.info("Пароль изменён");
                 return true;
             }
-        } catch (Exception e) {
-            log.warn("Пароль не изменён " + e);
-            return false;
-        }
         return false;
     }
+
+    /**
+     * Получение информации об авторизованном пользователе
+     */
 
     @Override
     public UserDto getUser(Authentication authentication) {
@@ -48,6 +53,10 @@ public class UserServiceImpl implements UserService {
         log.info("Запрошенная информация: " + userDto);
         return userDto;
     }
+
+    /**
+     * Обновление информации об авторизованном пользователе
+     */
 
     @Override
     public UserDto updateUser(UpdateUser updateUser, Authentication authentication) {
@@ -61,6 +70,10 @@ public class UserServiceImpl implements UserService {
         log.info("Пользователь обновлён :" + userDto);
         return userDto;
     }
+
+    /**
+     * Обновление аватара авторизованного пользователя
+     */
 
     @Override
     public void updateUserImage(MultipartFile image, Authentication authentication) {
