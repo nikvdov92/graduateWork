@@ -4,7 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Builder
@@ -13,23 +13,22 @@ import java.util.List;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
-@Table(name = "ads")
+@Table(name = "comments")
 
-public class Ad {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String title;
-    private Integer price;
-    private String image;
-    private String description;
+    private String text;
+    private LocalDateTime createdAt;
 
-    @ManyToOne
-
-    @JoinColumn(name = "author_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "author_id", referencedColumnName = "id")
     private User author;
 
-    @OneToMany(mappedBy = "ad", cascade = CascadeType.ALL)
-    private List<Comment> comments;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ads_id", referencedColumnName = "id")
+    private Ad ad;
+
 }

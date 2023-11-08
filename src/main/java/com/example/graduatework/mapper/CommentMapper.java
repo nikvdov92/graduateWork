@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-@Mapper(componentModel = "Spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+
 public interface CommentMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(source = "pk", target = "id")
@@ -26,7 +27,7 @@ public interface CommentMapper {
     @Mapping(source = "author.image.", target = "authorImage")
     CommentDto commentToCommentDto(Comment comment);
 
-    Comments listCommentToComments(int count, List<Comment> results);
+    Comments listCommentToComments(Integer count, List<Comment> results);
 
     @Named("localDateTimeToLong")
     default Long localDateTimeToLong(LocalDateTime dateTime) {

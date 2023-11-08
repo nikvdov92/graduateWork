@@ -1,6 +1,5 @@
 package com.example.graduatework.dto;
 
-
 import lombok.Data;
 
 @Data
