@@ -21,6 +21,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+
 @Slf4j
 @RestController
 @CrossOrigin(value = "http://localhost:3000")
@@ -42,7 +44,7 @@ public class AdsController {
 
     public ResponseEntity<Ads> getAllAds() {
         log.info("Запросить получение всех объявлений");
-        return ResponseEntity.ok(new Ads());
+        return ResponseEntity.ok(adService.getAllAds());
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -54,10 +56,11 @@ public class AdsController {
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
 
-    public ResponseEntity<AdDto> addAd(@RequestPart("properties") CreateOrUpdateAd properties,
-                                       @RequestPart("image") MultipartFile image) {
+    public ResponseEntity<AdDto> addAd(@RequestPart("properties") @Valid CreateOrUpdateAd properties,
+                                       @RequestPart("image") MultipartFile image,
+                                       Authentication authentication) {
         log.info("Запрос на добавление объявления");
-        return ResponseEntity.ok(new AdDto());
+        return ResponseEntity.ok(adService.addAd(properties, image, authentication));
     }
 
     @GetMapping("/{id}")
@@ -72,7 +75,11 @@ public class AdsController {
 
     public ResponseEntity<ExtendedAd> getAds(@PathVariable("id") int id) {
         log.info("Запрос информации по объявлению, идентификатор:" + id);
-        return ResponseEntity.ok(new ExtendedAd());
+        ExtendedAd extendedAd = adService.getAds(id);
+        if (extendedAd == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(extendedAd);
     }
 
     @DeleteMapping("/{id}")

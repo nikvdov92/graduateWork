@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -13,8 +14,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.lang.String;
 import java.util.Objects;
-
-import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 
 @Slf4j
@@ -37,17 +36,7 @@ public class ImageServiceImpl implements ImageService {
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
 
-        try (InputStream is = imageFile.getInputStream();
-             OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
-             BufferedInputStream bis = new BufferedInputStream(is, 1024);
-             BufferedOutputStream bos = new BufferedOutputStream(os, 1024)) {
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-
-            while ((bytesRead = bis.read(buffer)) != -1) {
-                bos.write(buffer, 0, bytesRead);
-            }
-        }
+        Files.write(filePath, imageFile.getInputStream().readAllBytes());
         return imageName.replace(".", "");
     }
 
@@ -78,11 +67,11 @@ public class ImageServiceImpl implements ImageService {
      * Получение расширения файла
      */
 
-    private String getExtensions (String filename) {
-        int dotIndex = filename.lastIndexOf('.');
-        if (dotIndex == -1 || dotIndex == filename.length() - 1) {
+    private String getExtensions(String filename) {
+        String extension = StringUtils.getFilenameExtension(filename);
+        if (extension == null || extension.length() == 0) {
             throw new IllegalArgumentException("Неверное имя файла: " + filename);
         }
-        return filename.substring(dotIndex + 1);
+        return extension;
     }
 }

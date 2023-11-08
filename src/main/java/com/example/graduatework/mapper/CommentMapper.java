@@ -13,6 +13,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+
 public interface CommentMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(source = "pk", target = "id")

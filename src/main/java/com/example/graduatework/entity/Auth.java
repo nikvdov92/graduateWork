@@ -18,4 +18,7 @@ public class Auth {
     String username;
 
     String authority;
+
+    @OneToOne(mappedBy = "auth")
+    User user;
 }

@@ -21,6 +21,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Slf4j
 @Validated
 @RestController
@@ -44,7 +46,8 @@ public class CommentController {
 
     public ResponseEntity<Comments> getComment(@PathVariable int id) {
             log.info("Запрос на получение комментариев объявления");
-            return ResponseEntity.ok(new Comments());
+        Comments comments = commentService.getComments(id);
+        return ResponseEntity.ok(comments);
     }
 
     @PostMapping(value = "/{id}/comments", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -56,9 +59,11 @@ public class CommentController {
     })
 
     public ResponseEntity<CommentDto> addComment(@PathVariable int id,
-                                                 @RequestBody CreateOrUpdateComment text) {
-        log.info("Запрос на добавление комментария к объявлению, идентификатор объявления: " + id);
-        return ResponseEntity.ok(new CommentDto());
+                                                 @RequestBody @Valid CreateOrUpdateComment text,
+                                                 Authentication authentication) {
+        log.info("Запрос на добавление комментария к объявлению, id комментария: " + id);
+        CommentDto commentDto = commentService.addComment(id, text, authentication);
+        return ResponseEntity.ok(commentDto);
     }
 
     @DeleteMapping(value = "/{adId}/comments/{commentId}")

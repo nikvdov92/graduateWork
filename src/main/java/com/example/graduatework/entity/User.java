@@ -49,4 +49,8 @@ public class User {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     @JsonManagedReference
     List<Comment> comments;
+
+    @OneToOne
+    @JoinColumn(name = "id")
+    Auth auth;
 }

@@ -17,15 +17,15 @@
             <column name="id" type="INT" startWith="1" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="username" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
             <column name="password" type="VARCHAR(255)"/>
             <column name="first_name" type="VARCHAR(255)"/>
             <column name="last_name" type="VARCHAR(255)"/>
             <column name="phone" type="VARCHAR(255)"/>
             <column name="role" type="VARCHAR(255)"/>
             <column name="image" type="VARCHAR(255)"/>
-            <column name="enabled" type="BOOLEAN"/>
-            <column name="reg_date" type="TIMESTAMP"/>
+
+
         </createTable>
     </changeSet>
 </databaseChangeLog>
