@@ -21,7 +21,7 @@ import java.util.Objects;
 @Service
 public class ImageServiceImpl implements ImageService {
     @Value("${image.dir.path}")
-    private final String imageDir;
+    private String imageDir;
 
 
     /**

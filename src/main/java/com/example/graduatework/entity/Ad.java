@@ -1,5 +1,7 @@
 package com.example.graduatework.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -18,6 +20,7 @@ import java.util.List;
 public class Ad {
 
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String title;
@@ -25,11 +28,18 @@ public class Ad {
     private String image;
     private String description;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
 
-    @JoinColumn(name = "author_id")
-    private User author;
+    @JoinColumn(name = "author_id", referencedColumnName = "id")
+    @JsonBackReference
+    User author;
 
     @OneToMany(mappedBy = "ad", cascade = CascadeType.ALL)
-    private List<Comment> comments;
+    @JsonManagedReference
+    List<Comment> comments;
+
+    @Override
+    public String toString() {
+        return title;
+    }
 }

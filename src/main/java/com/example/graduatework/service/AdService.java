@@ -15,11 +15,11 @@ public interface AdService {
 
     ExtendedAd getAds(Integer id);
 
-    boolean removeAd(int id, Authentication authentication);
+    void removeAd(int id, Authentication authentication);
 
     AdDto updateAds(int id, CreateOrUpdateAd createOrUpdateAd, Authentication authentication);
 
     Ads getAdsMe(Authentication authentication);
 
-    boolean updateImage(int id, MultipartFile imageFile, Authentication authentication);
+    void updateImage(int id, MultipartFile imageFile, Authentication authentication);
 }

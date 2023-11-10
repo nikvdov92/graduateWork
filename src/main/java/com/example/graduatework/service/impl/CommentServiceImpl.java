@@ -19,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,20 +62,14 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public boolean deleteComment(int adId, int commentId, Authentication authentication) {
+    public void deleteComment(int adId, int commentId, Authentication authentication) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
         if (comment.getAd().getId() != adId) {
             throw new AdNotFoundException();
         }
-        User author = comment.getAuthor();
-        if (author.getEmail().equals(authentication.getName()) || authentication.getAuthorities().contains
-                (new SimpleGrantedAuthority("ROLE_ADMIN"))) {
             commentRepository.delete(comment);
             log.info("Комментарий удалён: " + comment);
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -102,14 +95,9 @@ public class CommentServiceImpl implements CommentService {
             if (comment.getAd().getId() != adId) {
                 throw new AdNotFoundException();
             }
-            User author = comment.getAuthor();
-            if (author.getEmail().equals(authentication.getName()) || authentication.getAuthorities().contains
-                    (new SimpleGrantedAuthority("ROLE_ADMIN"))) {
                 comment.setText(text.getText());
                 commentRepository.save(comment);
                 log.info("Комментарий обновлен: " + comment);
-                return commentMapper.commentToCommentDto(comment);
-            }
-        return null;
+        return commentMapper.commentToCommentDto(comment);
     }
 }

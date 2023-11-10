@@ -1,5 +1,6 @@
 package com.example.graduatework.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -18,17 +19,27 @@ import java.time.LocalDateTime;
 public class Comment {
 
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String text;
-    private LocalDateTime createdAt;
+
+    @Column(name = "created_at")
+    LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id", referencedColumnName = "id")
-    private User author;
+    @JsonBackReference
+    User author;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ads_id", referencedColumnName = "id")
-    private Ad ad;
+    @JsonBackReference
+    Ad ad;
+
+    @Override
+    public String toString() {
+        return text;
+    }
 
 }

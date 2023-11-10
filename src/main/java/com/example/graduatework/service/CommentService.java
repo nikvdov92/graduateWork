@@ -9,7 +9,7 @@ public interface CommentService {
 
     CommentDto addComment(int adId, CreateOrUpdateComment text, Authentication authentication);
 
-    boolean deleteComment(int adId, int commentId, Authentication authentication);
+    void deleteComment(int adId, int commentId, Authentication authentication);
 
     Comments getComments(int id);
 

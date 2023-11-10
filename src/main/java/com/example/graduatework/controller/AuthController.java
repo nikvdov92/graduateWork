@@ -11,12 +11,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @Tag(name = "Вход и регистрация пользователей", description = "CRUD-операции для работы с пользователями")
 @RequiredArgsConstructor
@@ -50,6 +52,7 @@ public class AuthController {
         if (authService.login(login.getUsername(), login.getPassword())) {
             return ResponseEntity.ok().build();
         } else {
+            log.error("Неправильное имя пользователя или пароль");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }

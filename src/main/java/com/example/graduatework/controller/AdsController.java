@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.validation.Valid;
 
@@ -91,13 +92,12 @@ public class AdsController {
             @ApiResponse(responseCode = "404", description = "Not found")
     })
 
-    public ResponseEntity<Void> deleteAd(@PathVariable("id") int id, Authentication authentication) {
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
+    public ResponseEntity<Void> removeAd(@PathVariable("id") int id, Authentication authentication) {
         log.info("Запрос на удаление объявления, идентификатор:" + id);
-        if (adService.removeAd(id, authentication)) {
+        adService.removeAd(id, authentication);
             return ResponseEntity.ok().build();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
 
     @PatchMapping("/{id}")
     @Operation(summary = "Обновление информации об объявлении")
@@ -109,15 +109,12 @@ public class AdsController {
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "Not found")
     })
-
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
     public ResponseEntity<AdDto> updateAds(@PathVariable("id") int id,
                                            @RequestBody CreateOrUpdateAd createOrUpdateAd,
                                            Authentication authentication) {
         log.info("Запрос на обновление объявления, идентификатор:" + id);
         AdDto adDto = adService.updateAds(id, createOrUpdateAd, authentication);
-        if (adDto == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
         return ResponseEntity.ok(adDto);
     }
 
@@ -144,16 +141,13 @@ public class AdsController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "404", description = "Not found")
     })
-
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
     public ResponseEntity<Void> updateImage( @PathVariable("id") int id,
                                              @RequestPart("image") MultipartFile image,
                                              Authentication authentication) {
         log.info("Запрос на обновление изображения объявления");
-        if (adService.updateImage(id, image, authentication)) {
+        adService.updateImage(id, image, authentication);
             return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
     }
 }
 

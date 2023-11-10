@@ -51,7 +51,7 @@ public class UserController {
         if (userService.setPassword(newPassword, authentication)) {
             return ResponseEntity.ok().build();
         }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @GetMapping("/me")
@@ -68,7 +68,7 @@ public class UserController {
             return ResponseEntity.ok(userDto);
     }
 
-    @PostMapping("/me")
+    @PatchMapping ("/me")
     @Operation(summary = "Обновление информации об авторизованном пользователе")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "ОК",
