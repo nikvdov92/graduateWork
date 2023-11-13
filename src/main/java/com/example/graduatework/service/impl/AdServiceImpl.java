@@ -12,6 +12,7 @@ import com.example.graduatework.mapper.AdMapper;
 import com.example.graduatework.repository.AdRepository;
 import com.example.graduatework.repository.UserRepository;
 import com.example.graduatework.service.AdService;
+import com.example.graduatework.service.CommentService;
 import com.example.graduatework.service.ImageService;
 
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,7 @@ public class AdServiceImpl implements AdService {
     private final AdMapper adMapper;
     private final UserRepository userRepository;
     private final ImageService imageService;
+    private final CommentService commentService;
 
     /**
      * Получение всех объявлений
@@ -52,8 +54,8 @@ public class AdServiceImpl implements AdService {
      */
 
     @SneakyThrows
-    @Transactional
     @Override
+    @Transactional
     public AdDto addAd(CreateOrUpdateAd updateAd, MultipartFile imageFile, Authentication authentication) {
         User user = userRepository.findUserByEmail(authentication.getName())
                 .orElseThrow(UserNotFoundException::new);
@@ -91,8 +93,15 @@ public class AdServiceImpl implements AdService {
     public void removeAd(int id, Authentication authentication) {
         Ad ad = adRepository.findById(id)
                 .orElseThrow(AdNotFoundException::new);
-            adRepository.deleteById(id);
-            log.info("Объявление удалено: " + ad);
+        String imageName=ad.getImage();
+        adRepository.deleteById(id);
+        try {
+            imageService.deleteImage(imageName);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        commentService.deleteComments(id);
+        log.info("Объявление удалено: " + ad);
     }
 
     /**
@@ -102,8 +111,8 @@ public class AdServiceImpl implements AdService {
     @Override
     @Transactional
     public AdDto updateAds(int id, CreateOrUpdateAd createOrUpdateAd, Authentication authentication) {
-            Ad ad = adRepository.findById(id)
-                    .orElseThrow(AdNotFoundException::new);
+        Ad ad = adRepository.findById(id)
+                .orElseThrow(AdNotFoundException::new);
         ad.setTitle(createOrUpdateAd.getTitle());
         ad.setPrice(createOrUpdateAd.getPrice());
         ad.setDescription(createOrUpdateAd.getDescription());

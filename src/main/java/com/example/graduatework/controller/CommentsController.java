@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -34,7 +33,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 
-public class CommentController {
+public class CommentsController {
     public final CommentService commentService;
 
     public final CommentRepository commentRepository;
@@ -47,7 +46,7 @@ public class CommentController {
             @ApiResponse(responseCode = "404", description = "Not found"),
     })
 
-    public ResponseEntity<Comments> getComment(@PathVariable int id) {
+    public ResponseEntity<Comments> getComments(@PathVariable int id) {
             log.info("Запрос на получение комментариев объявления");
         Comments comments = commentService.getComments(id);
         return ResponseEntity.ok(comments);
@@ -78,7 +77,7 @@ public class CommentController {
             @ApiResponse(responseCode = "404", description = "Not found")
     })
 
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
+    @PreAuthorize("@customSecurityExpression.hasCommentAuthority(authentication,#commentId )")
     public ResponseEntity<Void> deleteComment(@PathVariable int adId,
                                               @PathVariable int commentId,
                                               Authentication authentication) {
@@ -95,7 +94,7 @@ public class CommentController {
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "Not found")
     })
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
+    @PreAuthorize("@customSecurityExpression.hasCommentAuthority(authentication,#commentId )")
     public ResponseEntity<CommentDto> updateComment(@PathVariable int adId,
                                                     @PathVariable int commentId,
                                                     @RequestBody CreateOrUpdateComment text,

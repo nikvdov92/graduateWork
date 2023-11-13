@@ -3,6 +3,7 @@ package com.example.graduatework.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ public class Comment {
     private Integer id;
     private String text;
 
+    @CreationTimestamp
     @Column(name = "created_at")
     LocalDateTime createdAt;
 

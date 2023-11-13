@@ -9,7 +9,7 @@ public interface ImageService {
 
     String uploadImage(String imageId, MultipartFile imageFile) throws IOException;
 
-    void deleteImage(String image);
+    void deleteImage(String image) throws IOException;
 
     void getImage(String id, HttpServletResponse response) throws IOException;
 }

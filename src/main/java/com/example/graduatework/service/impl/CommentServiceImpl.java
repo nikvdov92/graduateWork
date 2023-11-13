@@ -22,7 +22,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -48,7 +47,6 @@ public class CommentServiceImpl implements CommentService {
             Comment comment = Comment.builder()
                     .text(text.getText())
                     .author(user)
-                    .createdAt(LocalDateTime.now())
                     .ad(ad)
                     .build();
             commentRepository.save(comment);
@@ -73,13 +71,23 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
-     * Получение комментариев объявления
+     * Получение всех комментариев по ID объявления
      */
 
     @Override
     public Comments getComments(int id) {
         List<Comment> comments = commentRepository.findAllByAdId(id);
         return commentMapper.listCommentToComments(comments.size(), comments);
+    }
+
+    /**
+     * Получить комментарии по ID комментария
+     */
+
+    @Override
+    public Comment getComment(int id) {
+        return commentRepository.findById(id)
+                .orElseThrow(CommentNotFoundException::new);
     }
 
     /**
@@ -99,5 +107,15 @@ public class CommentServiceImpl implements CommentService {
                 commentRepository.save(comment);
                 log.info("Комментарий обновлен: " + comment);
         return commentMapper.commentToCommentDto(comment);
+    }
+
+    /**
+     * Удаление всех комментариев к объявлению
+     */
+
+    @Override
+    public void deleteComments(int adId) {
+        commentRepository.deleteAllByAdId(adId);
+        log.info("Комментарии к объявлению удалены: " + adId);
     }
 }

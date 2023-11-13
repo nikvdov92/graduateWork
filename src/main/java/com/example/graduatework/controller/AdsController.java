@@ -92,7 +92,7 @@ public class AdsController {
             @ApiResponse(responseCode = "404", description = "Not found")
     })
 
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
+    @PreAuthorize("customSecurityExpression.hasAdAuthority(authentication,#id)")
     public ResponseEntity<Void> removeAd(@PathVariable("id") int id, Authentication authentication) {
         log.info("Запрос на удаление объявления, идентификатор:" + id);
         adService.removeAd(id, authentication);
@@ -109,7 +109,8 @@ public class AdsController {
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "Not found")
     })
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
+
+    @PreAuthorize("@customSecurityExpression.hasAdAuthority(authentication,#id )")
     public ResponseEntity<AdDto> updateAds(@PathVariable("id") int id,
                                            @RequestBody CreateOrUpdateAd createOrUpdateAd,
                                            Authentication authentication) {
@@ -141,7 +142,8 @@ public class AdsController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "404", description = "Not found")
     })
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
+
+    @PreAuthorize("@customSecurityExpression.hasAdAuthority(authentication,#id )")
     public ResponseEntity<Void> updateImage( @PathVariable("id") int id,
                                              @RequestPart("image") MultipartFile image,
                                              Authentication authentication) {

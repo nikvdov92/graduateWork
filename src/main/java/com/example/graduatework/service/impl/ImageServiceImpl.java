@@ -44,9 +44,10 @@ public class ImageServiceImpl implements ImageService {
      * Удаление изображения
      */
     @Override
-    public void deleteImage(String image) {
-        File imageFile = new File(imageDir + image);
-        imageFile.delete();
+    public void deleteImage(String imageName)  throws IOException {
+        Path filePath = Path.of(String.format("%s/%s", imageDir, imageName.replace("_", ".")));
+        Files.deleteIfExists(filePath);
+        log.info("Изображение удалено: " + imageName);
     }
 
     /**
