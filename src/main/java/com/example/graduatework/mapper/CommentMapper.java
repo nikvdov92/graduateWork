@@ -12,18 +12,15 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-@Mapper(componentModel = "Spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface CommentMapper {
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(source = "pk", target = "id")
-    @Mapping(source = "author", target = "author.id")
-    Comment commentDtoToComment(CommentDto commentDto);
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 
+public interface CommentMapper {
     @Mapping(source = "id", target = "pk")
     @Mapping(source = "author.id", target = "author")
     @Mapping(source = "author.firstName", target = "authorFirstName")
     @Mapping(source = "createdAt", target = "createdAt", qualifiedByName = "localDateTimeToLong")
-    @Mapping(source = "author.image.", target = "authorImage")
+    @Mapping(target = "authorImage", expression =
+            "java(comment.getAuthor().getImage() != null ? \"/image/\" + comment.getAuthor().getImage() : \"\")")
     CommentDto commentToCommentDto(Comment comment);
 
     Comments listCommentToComments(int count, List<Comment> results);

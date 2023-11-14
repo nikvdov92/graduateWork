@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="1" author="nikvdov">
+
+        <preConditions>
+            <not>
+                <tableExists tableName="ads"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="ads">
+            <column name="id" type="INT" startWith="1" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="author_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="price" type="INT"/>
+            <column name="image" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(1024)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="nikvdov">
+        <preConditions>
+            <tableExists tableName="users"/>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="FK_ADS_TO_USER_ID"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint constraintName="FK_ADS_TO_USERS_ID"
+                                 baseColumnNames="author_id"
+                                 baseTableName="ads"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"
+                                 deleteCascade="true"/>
+    </changeSet>
+</databaseChangeLog>
