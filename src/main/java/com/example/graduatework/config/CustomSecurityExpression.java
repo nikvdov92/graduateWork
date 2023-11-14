@@ -16,12 +16,14 @@ public class CustomSecurityExpression {
     private final CommentService commentService;
 
     public boolean hasAdAuthority(Authentication authentication, int adId) {
-        return authentication.getAuthorities().toString().contains("ROLE_ADMIN") ||
-                adService.getAds(adId).getEmail().equals(authentication.getName());
+        return authentication.getAuthorities().stream()
+                .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"))
+                && adService.getAds(adId).getEmail().equals(authentication.getName());
     }
 
     public boolean hasCommentAuthority(Authentication authentication, int commentId) {
-        return authentication.getAuthorities().toString().contains("ROLE_ADMIN") ||
-                commentService.getComment(commentId).getAuthor().getEmail().equals(authentication.getName());
+        return authentication.getAuthorities().stream()
+                .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"))
+                && commentService.getComment(commentId).getAuthor().getEmail().equals(authentication.getName());
     }
 }

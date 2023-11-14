@@ -31,12 +31,10 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id", referencedColumnName = "id")
-    @JsonBackReference
     User author;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ads_id", referencedColumnName = "id")
-    @JsonBackReference
     Ad ad;
 
     @Override

@@ -70,7 +70,7 @@ public class ImageServiceImpl implements ImageService {
 
     private String getExtensions(String filename) {
         String extension = StringUtils.getFilenameExtension(filename);
-        if (extension == null || extension.length() == 0) {
+        if (extension == null || extension.isEmpty()) {
             throw new IllegalArgumentException("Неверное имя файла: " + filename);
         }
         return extension;

@@ -31,11 +31,9 @@ public class Ad {
     @ManyToOne(fetch = FetchType.LAZY)
 
     @JoinColumn(name = "author_id", referencedColumnName = "id")
-    @JsonBackReference
     User author;
 
     @OneToMany(mappedBy = "ad", cascade = CascadeType.ALL)
-    @JsonManagedReference
     List<Comment> comments;
 
     @Override

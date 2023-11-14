@@ -92,7 +92,7 @@ public class AdsController {
             @ApiResponse(responseCode = "404", description = "Not found")
     })
 
-    @PreAuthorize("customSecurityExpression.hasAdAuthority(authentication,#id)")
+    @PreAuthorize("@customSecurityExpression.hasAdAuthority(authentication,#id)")
     public ResponseEntity<Void> removeAd(@PathVariable("id") int id, Authentication authentication) {
         log.info("Запрос на удаление объявления, идентификатор:" + id);
         adService.removeAd(id, authentication);
