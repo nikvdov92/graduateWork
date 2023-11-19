@@ -61,7 +61,7 @@ public class AuthControllerTests {
         @MethodSource("usersForLogin")
         public void loginTest(String email, String password, HttpStatus httpStatus) {
             Register register = fakeUser();
-            //register.setUsername("user1@nikvdov.com");
+            register.setUsername("user1@nikvdov.com");
             register.setPassword("12345678");
             User user = registerUser(register);
             assertThat(user.getEmail()).isEqualTo(register.getUsername());

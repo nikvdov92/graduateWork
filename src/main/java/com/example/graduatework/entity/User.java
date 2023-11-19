@@ -1,13 +1,14 @@
 package com.example.graduatework.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.example.graduatework.dto.Role;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+
 import javax.validation.constraints.Email;
-import java.time.LocalDateTime;
+
 import java.util.List;
 @AllArgsConstructor
 @Builder
@@ -41,19 +42,16 @@ public class User {
 
     String image;
 
-    boolean enabled;
-
-    LocalDateTime regDate;
+    Role role;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
-    @JsonManagedReference
     List<Ad> ads;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
-    @JsonManagedReference
     List<Comment> comments;
 
-    @OneToOne
-    @JoinColumn(name = "id")
-    Auth auth;
+    @Override
+    public String toString() {
+        return firstName + " " + lastName;
+    }
 }

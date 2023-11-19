@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="add_column" author="nikvdov">
+
+        <preConditions>
+            <tableExists tableName="users"/>
+        </preConditions>
+
+        <addColumn tableName="users">
+            <column name="role" type="INT"/>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="drop_enabled_column" author="nikvdov">
+
+        <preConditions>
+            <tableExists tableName="users"/>
+            <columnExists tableName="users" columnName="enabled"/>
+        </preConditions>
+
+        <dropColumn tableName="users">
+            <column name="enabled"/>
+        </dropColumn>
+    </changeSet>
+
+    <changeSet id="drop_reg_date_column" author="nikvdov">
+
+        <preConditions>
+            <tableExists tableName="users"/>
+            <columnExists tableName="users" columnName="reg_date"/>
+        </preConditions>
+
+        <dropColumn tableName="users">
+            <column name="reg_date"/>
+        </dropColumn>
+    </changeSet>
+
+</databaseChangeLog>

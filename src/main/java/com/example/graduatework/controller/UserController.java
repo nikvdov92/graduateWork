@@ -25,6 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+
 @Slf4j
 @RestController
 @CrossOrigin(value = "http://localhost:3000")
@@ -63,8 +65,7 @@ public class UserController {
     })
     public ResponseEntity<UserDto> getUser(Authentication authentication) {
         log.info("Запрос на получение информации об авторизованном пользователе");
-            UserDto userDto = userService.getUser(authentication);
-            return ResponseEntity.ok(userDto);
+        return ResponseEntity.ok(userService.getUserDto(authentication));
     }
 
     @PatchMapping ("/me")
@@ -72,14 +73,13 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "ОК",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            array = @ArraySchema(schema = @Schema(implementation = UpdateUser.class)))),
+                            schema = @Schema(implementation = UserDto.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    public ResponseEntity<UserDto> updateUser(@RequestBody UpdateUser updateUser,
+    public ResponseEntity<UserDto> updateUser(@RequestBody @Valid UpdateUser updateUser,
                                               Authentication authentication) {
         log.info("Запрос на обновление информации об авторизованном пользователе");
-            UserDto updatedUser = userService.updateUser(updateUser, authentication);
-            return ResponseEntity.ok(updatedUser);
+        return ResponseEntity.ok(userService.updateUser(updateUser, authentication));
     }
 
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

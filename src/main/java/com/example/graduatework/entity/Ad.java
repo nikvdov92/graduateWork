@@ -1,7 +1,5 @@
 package com.example.graduatework.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -29,7 +27,6 @@ public class Ad {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-
     @JoinColumn(name = "author_id", referencedColumnName = "id")
     User author;
 
@@ -38,6 +35,7 @@ public class Ad {
 
     @Override
     public String toString() {
+
         return title;
     }
 }

@@ -45,7 +45,6 @@ public class CommentsController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "404", description = "Not found"),
     })
-
     public ResponseEntity<Comments> getComments(@PathVariable int id) {
             log.info("Запрос на получение комментариев объявления");
         Comments comments = commentService.getComments(id);
@@ -59,7 +58,6 @@ public class CommentsController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "404", description = "Not found"),
     })
-
     public ResponseEntity<CommentDto> addComment(@PathVariable int id,
                                                  @RequestBody @Valid CreateOrUpdateComment text,
                                                  Authentication authentication) {
@@ -76,7 +74,6 @@ public class CommentsController {
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "Not found")
     })
-
     @PreAuthorize("@customSecurityExpression.hasCommentAuthority(authentication,#commentId )")
     public ResponseEntity<Void> deleteComment(@PathVariable int adId,
                                               @PathVariable int commentId,

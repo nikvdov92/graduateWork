@@ -5,6 +5,7 @@ import com.example.graduatework.dto.Ads;
 import com.example.graduatework.dto.CreateOrUpdateAd;
 import com.example.graduatework.dto.ExtendedAd;
 import com.example.graduatework.entity.Ad;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;

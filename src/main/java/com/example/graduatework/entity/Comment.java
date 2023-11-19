@@ -1,8 +1,8 @@
 package com.example.graduatework.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -39,6 +39,7 @@ public class Comment {
 
     @Override
     public String toString() {
+
         return text;
     }
 

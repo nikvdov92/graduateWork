@@ -1,28 +1,25 @@
 package com.example.graduatework.service.impl;
 
 import com.example.graduatework.dto.Register;
-import com.example.graduatework.exception.UserNotFoundException;
-import com.example.graduatework.repository.UserRepository;
+import com.example.graduatework.entity.User;
+import com.example.graduatework.mapper.UserMapper;
 import com.example.graduatework.service.AuthService;
+import com.example.graduatework.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.UserDetailsManager;
-import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    private final UserDetailsManager manager;
+    private final UserService userService;
     private final PasswordEncoder encoder;
-    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     /**
      * Вход пользователя
@@ -30,11 +27,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean login(String userName, String password) {
-        if (!manager.userExists(userName)) {
+        com.example.graduatework.entity.User user = userService.getUser(userName);
+        if (user == null) {
             return false;
         }
-        UserDetails userDetails = manager.loadUserByUsername(userName);
-        return encoder.matches(password, userDetails.getPassword());
+        return encoder.matches(password, user.getPassword());
     }
 
     /**
@@ -43,25 +40,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean register(Register register) {
-        if (manager.userExists(register.getUsername())) {
+        if (userService.getUser(register.getUsername()) != null) {
             return false;
         }
-        manager.createUser(
-                User.builder()
-                        .passwordEncoder(this.encoder::encode)
-                        .password(register.getPassword())
-                        .username(register.getUsername())
-                        .roles(register.getRole().name())
-                        .build());
-
-        com.example.graduatework.entity.User user = userRepository.findUserByEmail(register.getUsername())
-                .orElseThrow(UserNotFoundException::new);
-
-        user.setFirstName(register.getFirstName());
-        user.setLastName(register.getLastName());
-        user.setPhone(register.getPhone());
-        user.setRegDate(LocalDateTime.now());
-        userRepository.save(user);
+        User user = userMapper.registerToUser(register);
+        user.setPassword(encoder.encode(user.getPassword()));
+        userService.saveUser(user);
         log.info("Новый пользователь создан");
         return true;
     }

@@ -8,6 +8,6 @@
     <include file="table/create-users-table.xml" relativeToChangelogFile="true"/>
     <include file="table/create-ads-table.xml" relativeToChangelogFile="true"/>
     <include file="table/create-comments-table.xml" relativeToChangelogFile="true"/>
-    <include file="table/create-auth-table.xml" relativeToChangelogFile="true"/>
+    <include file="table/update-users-table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

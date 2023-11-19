@@ -5,7 +5,7 @@
 Вдовин Никита(nikvdov92)
 
 Используемые технологии:
-Java, Maven, Spring, Postgres, GitHub
+Java VM, Maven, Spring, Postgres, GitHub
 
 Язык: Java 11
 Сборка проекта: Maven

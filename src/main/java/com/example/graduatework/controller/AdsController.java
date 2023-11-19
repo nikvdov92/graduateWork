@@ -110,7 +110,7 @@ public class AdsController {
             @ApiResponse(responseCode = "404", description = "Not found")
     })
 
-    @PreAuthorize("@customSecurityExpression.hasAdAuthority(authentication,#id )")
+    @PreAuthorize("@customSecurityExpression.hasAdAuthority(authentication,#id)")
     public ResponseEntity<AdDto> updateAds(@PathVariable("id") int id,
                                            @RequestBody CreateOrUpdateAd createOrUpdateAd,
                                            Authentication authentication) {
@@ -131,7 +131,7 @@ public class AdsController {
     public ResponseEntity<Ads> getAdsMe(Authentication authentication) {
         log.info("Запрос на получение объявлений от авторизованного пользователя");
         Ads ads = adService.getAdsMe(authentication);
-        return ResponseEntity.ok(new Ads());
+        return ResponseEntity.ok(ads);
     }
 
     @PatchMapping(value = "/{id}/image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -143,7 +143,7 @@ public class AdsController {
             @ApiResponse(responseCode = "404", description = "Not found")
     })
 
-    @PreAuthorize("@customSecurityExpression.hasAdAuthority(authentication,#id )")
+    @PreAuthorize("@customSecurityExpression.hasAdAuthority(authentication,#id)")
     public ResponseEntity<Void> updateImage( @PathVariable("id") int id,
                                              @RequestPart("image") MultipartFile image,
                                              Authentication authentication) {
