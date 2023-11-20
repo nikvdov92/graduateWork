@@ -40,7 +40,7 @@ public class ImageServiceImpl implements ImageService {
         Files.deleteIfExists(filePath);
 
         Files.write(filePath, imageFile.getInputStream().readAllBytes());
-        return imageName.replace(".", "");
+        return imageId;
     }
 
     /**

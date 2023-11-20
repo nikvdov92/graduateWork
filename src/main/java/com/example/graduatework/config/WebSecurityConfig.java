@@ -21,7 +21,8 @@ public class WebSecurityConfig {
             "/webjars/**",
             "/login",
             "/register",
-            "/ads"
+            "/ads",
+            "C:\\Users\\Вдовины\\OneDrive\\Desktop\\MyBeautyProf\\картинки\\fenix.jpg"
     };
 
     @Bean
