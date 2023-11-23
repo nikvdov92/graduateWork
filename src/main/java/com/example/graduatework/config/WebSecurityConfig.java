@@ -19,22 +19,23 @@ public class WebSecurityConfig {
             "/swagger-ui.html",
             "/v3/api-docs",
             "/webjars/**",
-            "/login",
             "/register",
-            "/ads",
-            "C:\\Users\\Вдовины\\OneDrive\\Desktop\\MyBeautyProf\\картинки\\fenix.jpg"
+            "/login",
+            "/ads/**",
+            "/image/**",
+            "/users/**"
     };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf()
                 .disable()
-                .authorizeHttpRequests(
+                .authorizeRequests(
                         authorization ->
                                 authorization
-                                        .mvcMatchers(AUTH_WHITELIST)
+                                        .antMatchers(AUTH_WHITELIST)
                                         .permitAll()
-                                        .mvcMatchers("/ads/**", "/users/**")
+                                        .anyRequest()
                                         .authenticated())
                 .cors()
                 .and()
