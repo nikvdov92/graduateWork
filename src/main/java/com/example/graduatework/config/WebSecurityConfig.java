@@ -12,16 +12,17 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfig { private static final String[] AUTH_WHITELIST = {
+public class WebSecurityConfig {
+
+    private static final String[] AUTH_WHITELIST = {
             "/swagger-resources/**",
             "/swagger-ui.html",
             "/v3/api-docs",
             "/webjars/**",
             "/register",
             "/login",
-            "/ads/**",
-            "/image/**",
-            "/users/**"
+            "/ads",
+            "/image/*"
     };
 
     @Bean
@@ -33,7 +34,7 @@ public class WebSecurityConfig { private static final String[] AUTH_WHITELIST = 
                                 authorization
                                         .antMatchers(AUTH_WHITELIST)
                                         .permitAll()
-                                        .anyRequest()
+                                        .mvcMatchers("/ads/**", "/users/**")
                                         .authenticated())
                 .cors()
                 .and()
@@ -43,6 +44,7 @@ public class WebSecurityConfig { private static final String[] AUTH_WHITELIST = 
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();
     }
 }
