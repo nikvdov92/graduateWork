@@ -29,6 +29,6 @@ public class CustomSecurityExpression {
     }
 
     private boolean hasAdmin(Authentication authentication) {
-        return authentication.getAuthorities().contains(new SimpleGrantedAuthority(Role.ADMIN.name()));
+        return authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_" + Role.ADMIN.name()));
     }
 }

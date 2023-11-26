@@ -19,7 +19,7 @@ public class CustomUserDetails implements UserDetails {
 
         Collection<SimpleGrantedAuthority> roles = new LinkedList<>();
 
-        roles.add(new SimpleGrantedAuthority(user.getRole().name()));
+        roles.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
 
         return roles;
     }
