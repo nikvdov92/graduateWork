@@ -1,22 +1,24 @@
 package com.example.graduatework.entity;
 
-import com.example.graduatework.dto.AdDto;
-import com.example.graduatework.dto.CommentDto;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.FieldDefaults;
 import com.example.graduatework.dto.Role;
 
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
 import javax.persistence.*;
+
 import javax.validation.constraints.Email;
+
 import java.util.List;
-@Entity
-@Table(name = "users")
+@AllArgsConstructor
+@Builder
 @Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@Table(name = "users")
+
 public class User {
 
     @Id
@@ -24,6 +26,7 @@ public class User {
     Integer id;
 
     @EqualsAndHashCode.Include
+    @Column(name = "username")
     @Email
     String email;
 
@@ -37,16 +40,18 @@ public class User {
 
     String phone;
 
-    @Enumerated(EnumType.STRING)
-    Role role;
-
     String image;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    List<AdDto> adDtos;
+    Role role;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    List<CommentDto> commentDtos;
+    List<Ad> ads;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    List<Comment> comments;
+
+    @Override
+    public String toString() {
+        return firstName + " " + lastName;
+    }
 }

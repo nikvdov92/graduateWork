@@ -3,34 +3,33 @@ package com.example.graduatework.controller;
 import com.example.graduatework.dto.NewPassword;
 import com.example.graduatework.dto.UpdateUser;
 import com.example.graduatework.dto.UserDto;
-import com.example.graduatework.exception.UnauthorizedException;
 import com.example.graduatework.service.UserService;
+
 import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import io.swagger.v3.oas.annotations.Operation;
-
+import javax.validation.Valid;
 
 @Slf4j
-@Validated
 @RestController
-@CrossOrigin(value = "http://localhost:5432")
+@CrossOrigin(value = "http://localhost:3000")
 @RequestMapping("/users")
 @Tag(name = "Управление пользователями", description = "CRUD-операции для работы с пользователями")
 @RequiredArgsConstructor
@@ -53,7 +52,7 @@ public class UserController {
         if (userService.setPassword(newPassword, authentication)) {
             return ResponseEntity.ok().build();
         }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @GetMapping("/me")
@@ -66,33 +65,21 @@ public class UserController {
     })
     public ResponseEntity<UserDto> getUser(Authentication authentication) {
         log.info("Запрос на получение информации об авторизованном пользователе");
-
-        try {
-            UserDto userDto = userService.getUser(authentication);
-            return ResponseEntity.ok(userDto);
-        } catch (UnauthorizedException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        return ResponseEntity.ok(userService.getUserDto(authentication));
     }
 
-    @PostMapping("/me")
+    @PatchMapping ("/me")
     @Operation(summary = "Обновление информации об авторизованном пользователе")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "ОК",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            array = @ArraySchema(schema = @Schema(implementation = UpdateUser.class)))),
+                            schema = @Schema(implementation = UserDto.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    public ResponseEntity<UserDto> updateUser(@RequestBody UpdateUser updateUser,
+    public ResponseEntity<UserDto> updateUser(@RequestBody @Valid UpdateUser updateUser,
                                               Authentication authentication) {
         log.info("Запрос на обновление информации об авторизованном пользователе");
-
-        try {
-            UserDto updatedUser = userService.updateUser(updateUser, authentication);
-            return ResponseEntity.ok(updatedUser);
-        } catch (UnauthorizedException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        return ResponseEntity.ok(userService.updateUser(updateUser, authentication));
     }
 
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -104,12 +91,7 @@ public class UserController {
     public ResponseEntity<Void> updateUserImage(@RequestPart("image") MultipartFile image,
                                                 Authentication authentication) {
         log.info("Запрос на обновление аватара авторизованного пользователя");
-
-        try {
             userService.updateUserImage(image, authentication);
             return ResponseEntity.ok().build();
-        } catch (UnauthorizedException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
     }
 }

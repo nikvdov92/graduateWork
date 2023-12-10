@@ -8,7 +8,7 @@ Content-Type: application/json
 
 {
   "username": "user@gmail.com",
-  "password": "password"
+  "password": "12345678"
 }
 
 ###
@@ -17,10 +17,10 @@ Content-Type: application/json
 
 {
   "username": "user@gmail.com",
-  "password": "password",
-  "firstName": " asdad",
-  "lastName": " asdad",
-  "phone": " asdad",
+  "password": "12345678",
+  "firstName": "Nikita",
+  "lastName": "Vdovin",
+  "phone": " +79001234567",
   "role": "USER"
 }
 
@@ -40,9 +40,9 @@ Content-Type: application/json
 Authorization: Basic user@gmail.com password
 
 {
-  "phone": "33333",
-  "lastName": "Ivanov",
-  "firstName": "Ivan"
+  "phone": "+79001234568",
+  "lastName": "Vovin",
+  "firstName": "Nikit"
 }
 
 ###
@@ -56,8 +56,8 @@ Content-Type: application/json
 Authorization: Basic user@gmail.com password
 
 {
-  "newPassword": "password",
-  "currentPassword": "password1"
+  "newPassword": "87654321",
+  "currentPassword": "122345678"
 }
 
 ###
@@ -66,7 +66,7 @@ Content-Type: application/json
 Authorization: Basic user@gmail.com password
 
 {
-  "price": 123,
-  "description": "123",
-  "title": "123"
+  "price": 5000,
+  "description": "Крутая футболка",
+  "title": "Футболка"
 }

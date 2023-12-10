@@ -3,8 +3,10 @@ package com.example.graduatework.entity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Builder
@@ -13,29 +15,32 @@ import java.util.List;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
-@Table(name = "ads")
+@Table(name = "comments")
 
-public class Ad {
+public class Comment {
 
     @Id
     @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String title;
-    private Integer price;
-    private String image;
-    private String description;
+    private String text;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @CreationTimestamp
+    @Column(name = "created_at")
+    LocalDateTime createdAt;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id", referencedColumnName = "id")
     User author;
 
-    @OneToMany(mappedBy = "ad", cascade = CascadeType.ALL)
-    List<Comment> comments;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ads_id", referencedColumnName = "id")
+    Ad ad;
 
     @Override
     public String toString() {
 
-        return title;
+        return text;
     }
+
 }
