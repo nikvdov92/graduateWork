@@ -40,7 +40,7 @@ public class ImageServiceImpl implements ImageService {
         Files.deleteIfExists(filePath);
 
         Files.write(filePath, imageFile.getInputStream().readAllBytes());
-        return imageId;
+        return imageName;
     }
 
     /**
@@ -58,12 +58,10 @@ public class ImageServiceImpl implements ImageService {
      */
 
     @Override
-    public void getImage(String imageName, HttpServletResponse response) throws IOException {
+    public byte[] getImage(String imageName) throws IOException {
         Path filePath = Path.of(String.format("%s/%s", imageDir, imageName.replace("_", ".")));
-        try (InputStream is = Files.newInputStream(filePath);
-             OutputStream os = response.getOutputStream()) {
-            response.setStatus(200);
-            is.transferTo(os);
+        try (InputStream is = Files.newInputStream(filePath)) {
+            return is.readAllBytes();
         }
     }
 

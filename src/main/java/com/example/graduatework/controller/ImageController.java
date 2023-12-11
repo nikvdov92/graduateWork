@@ -22,8 +22,13 @@ import java.io.IOException;
 public class ImageController {
     private final ImageService imageService;
 
-    @GetMapping(value = "/{id}")
-    public void getImage (@PathVariable String id, HttpServletResponse response) throws IOException {
-        imageService.getImage(id,response);
+    @GetMapping(value = "/user/{id}")
+    public byte[] getAvatar (@PathVariable String id) throws IOException {
+        return imageService.getImage("user/" + id);
+    }
+
+    @GetMapping(value = "/ad/{id}")
+    public byte[] getImage (@PathVariable String id) throws IOException {
+        return imageService.getImage("ad/" + id);
     }
 }

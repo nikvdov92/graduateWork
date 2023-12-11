@@ -63,7 +63,7 @@ public class AdServiceImpl implements AdService {
         ad.setAuthor(user);
         adRepository.saveAndFlush(ad);
         try {
-            ad.setImage(imageService.uploadImage("ad" + ad.getId(), imageFile));
+            ad.setImage(imageService.uploadImage("ad/" + ad.getId(), imageFile));
             adRepository.saveAndFlush(ad);
             log.info("Новое объявление добавлено и сохранено: " + ad);
             return adMapper.adToAdDto(ad);
@@ -143,7 +143,7 @@ public class AdServiceImpl implements AdService {
             Ad ad = adRepository.findById(id)
                     .orElseThrow(AdNotFoundException::new);
         try {
-            ad.setImage(imageService.uploadImage("ad" + ad.getId(), imageFile));
+            ad.setImage(imageService.uploadImage("ad/" + ad.getId(), imageFile));
             adRepository.saveAndFlush(ad);
             log.info("Изображение объявления обновлено");
         } catch (IOException e) {

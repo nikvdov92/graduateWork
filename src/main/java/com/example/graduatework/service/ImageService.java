@@ -12,5 +12,5 @@ public interface ImageService {
 
     void deleteImage(String image) throws IOException;
 
-    void getImage(String id, HttpServletResponse response) throws IOException;
+    byte[] getImage(String id) throws IOException;
 }

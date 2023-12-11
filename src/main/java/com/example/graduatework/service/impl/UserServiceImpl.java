@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findUserByEmail(authentication.getName())
                 .orElseThrow(UserNotFoundException::new);
         try {
-            user.setImage(imageService.uploadImage("user" + user.getId(), imageFile));
+            user.setImage(imageService.uploadImage("user/" + user.getId(), imageFile));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

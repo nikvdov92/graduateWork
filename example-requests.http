@@ -20,7 +20,7 @@ Content-Type: application/json
   "password": "12345678",
   "firstName": "Nikita",
   "lastName": "Vdovin",
-  "phone": " +79001234567",
+  "phone": " +79222090566",
   "role": "USER"
 }
 
@@ -57,7 +57,7 @@ Authorization: Basic user@gmail.com password
 
 {
   "newPassword": "87654321",
-  "currentPassword": "122345678"
+  "currentPassword": "12345678"
 }
 
 ###
